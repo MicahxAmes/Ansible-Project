@@ -1,0 +1,27 @@
+---
+- name: Configure EC2 instance
+  hosts: aws_instances
+  tasks:
+  - name: Enable EPEL Repository
+    command: amazon-linux-extras install epel -y
+    become: yes
+
+  - name: Install Nginx
+    become: yes
+    yum:
+      name: nginx
+      state: present
+
+  - name: Deploy static website files
+    become: yes
+    copy:
+      src: "{{ item.src }}"
+      dest: "/usr/share/nginx/html/{{ item.dest }}"
+      mode: '0644'
+    loop:
+      - { src: '../index.html', dest: 'index.html' }  # Assuming relative paths work for your setup
+      - { src: '../style.css', dest: 'style.css' }
+      - { src: '../script.js', dest: 'script.js' }  # Adjusted path for script.js
+    environment:
+      AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+      AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"

@@ -1,0 +1,7 @@
+# Ignore AWS credentials / terraform files
+/aws/credentials
+/terraform/variables.tf
+/.terraform/
+/terraform.tfstate.backup
+/MyKeyPair.pem
+/terraform/.terraform.lock.hcl
